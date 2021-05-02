@@ -107,6 +107,17 @@ public class Main {
                         }
                     }
                     while (!date.equals("0"));
+                    System.out.println("-------THANKS-------");
+                }
+                else if (chon.equals("4")) {
+                    String tieptuc ;
+                    do 
+                    {
+                        ThemTu();
+                        System.out.print("Ban co muon them tu nua khong ?: Nhan YES de tiep tuc, hoac bat ki de thoat: ");
+                        tieptuc = sc.nextLine();
+                    }
+                    while (tieptuc.equals("YES"));
                 }
                 else {
                     System.out.println("Ban da chon sai roi. Moi chon lai.");
@@ -119,14 +130,11 @@ public class Main {
     }
     
     private static boolean LoadTuDien() {
-        System.out.print("Vui long nhap duong dan file tu dien: ");
-        String url = sc.nextLine();
-
         FileInputStream fileInputStream = null;
         BufferedReader bufferedReader = null;
 
         try {
-            fileInputStream = new FileInputStream(url);
+            fileInputStream = new FileInputStream("slang.txt");
             bufferedReader = new BufferedReader(new InputStreamReader(fileInputStream));
             String line = bufferedReader.readLine();
             while (line != null) {
@@ -203,15 +211,58 @@ public class Main {
         ArrayList<String> tunghia = thongKe.get(date);
         if(loai.charAt(0) != 'S' && loai.charAt(0) != 'D') {
             for(int i = 0; i < tunghia.size(); i++) {
-                System.out.println(tunghia.get(i));            
+                System.out.println(tunghia.get(i));  
             }
         }
         else {
+           int dem = 0;
             for(int i = 0; i < tunghia.size(); i++) {   
                 if(tunghia.get(i).charAt(1) == loai.charAt(0)) {
-                    System.out.println(tunghia.get(i));            
+                    System.out.println(tunghia.get(i));  
+                    dem++;
                 }
             }
+            if(dem == 0) {
+                System.out.println("Khong co lich su tra cuu");
+            }
+        }
+    }
+    
+    private  static  void ThemTu() {
+        System.out.print("Moi nham tu (Slang): ");
+        String tu = sc.nextLine();
+        if(dictionarySD.get(tu) == null) {
+            System.out.print("Moi nham nghia (Definition): ");
+            String nghia = sc.nextLine();
+            dictionarySD.put(tu, nghia);
+            dictionaryDS.put(nghia, tu);
+            
+            BufferedWriter bw = null;
+            FileWriter fw = null;
+            try {
+                String data = "\n" + tu + "`" + nghia;
+                File file = new File("Slang.txt");
+                fw = new FileWriter(file.getAbsoluteFile(), true);
+                bw = new BufferedWriter(fw);
+                bw.write(data);  
+            }
+            catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                try {
+                    if (bw != null)
+                        bw.close();
+                    if (fw != null)
+                        fw.close();
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+            }
+
+            System.out.println("Them thanh cong");
+        }
+        else {
+            System.out.print("Tu nay da co trong tu dien. Nhan CN de co the cap nhat hoac bat ki de thoat: ");
         }
     }
 }
