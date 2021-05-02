@@ -9,6 +9,8 @@ import java.io.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -58,7 +60,14 @@ public class Main {
                             else {
                                 System.out.println("Tu nay chua co trong tu dien. Nhap 'THEM' de them vao hoac bam bat ki de tiep tuc.");
                                 if(sc.nextLine().equals("THEM")) {
-                                    System.out.println("Them thanh cong");
+                                    if(ThemTu(tratu)) {
+                                        System.out.print("Ban co muon cap nhat vao file tu dien ?. Nhan YES de luu, hoac bat ki de thoat: ");
+                                        if(sc.nextLine().equals("YES"))
+                                        {
+                                            LuuFile();
+                                            System.out.println("Da cap nhat file.");
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -80,7 +89,14 @@ public class Main {
                             else {
                                 System.out.println("Tu nay chua co trong tu dien. Nhap 'THEM' de them vao hoac bam bat ki de tiep tuc.");
                                 if(sc.nextLine().equals("THEM")) {
-                                    System.out.println("Them thanh cong");
+                                    if(ThemTu("")) {
+                                        System.out.print("Ban co muon cap nhat vao file tu dien ?. Nhan YES de luu, hoac bat ki de thoat: ");
+                                        if(sc.nextLine().equals("YES"))
+                                        {
+                                            LuuFile();
+                                            System.out.println("Da cap nhat file.");
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -111,13 +127,69 @@ public class Main {
                 }
                 else if (chon.equals("4")) {
                     String tieptuc ;
+                    boolean check = false;
                     do 
                     {
-                        ThemTu();
+                        check = ThemTu("");
                         System.out.print("Ban co muon them tu nua khong ?: Nhan YES de tiep tuc, hoac bat ki de thoat: ");
                         tieptuc = sc.nextLine();
                     }
                     while (tieptuc.equals("YES"));
+                    
+                    if(check) {
+                        System.out.print("Ban co muon cap nhat vao file tu dien ?. Nhan YES de luu, hoac bat ki de thoat: ");
+                        tieptuc = sc.nextLine();
+                        if(tieptuc.equals("YES"))
+                        {
+                            LuuFile();
+                            System.out.println("Da cap nhat file.");
+                        }
+                    }
+                    System.out.println("-------THANKS-------");
+                }
+                else if (chon.equals("5")) {
+                    String tieptuc;
+                    boolean check = false;
+                    do 
+                    {
+                        check = SuaTu("");
+                        System.out.print("Ban co muon sua tu nua khong ?: Nhan YES de tiep tuc, hoac bat ki de thoat: ");
+                        tieptuc = sc.nextLine();
+                    }
+                    while (tieptuc.equals("YES"));
+                    if(check) {
+                        System.out.print("Ban co muon cap nhat vao file tu dien ?. Nhan YES de luu, hoac bat ki de thoat: ");
+                        tieptuc = sc.nextLine();
+                        if(tieptuc.equals("YES"))
+                        {
+                            LuuFile();
+                            System.out.println("Da cap nhat file.");
+                        }
+                    }
+                    System.out.println("-------THANKS-------");
+                }
+                else if (chon.equals("6")) {
+                    String tieptuc;
+                    int sl = dictionarySD.size();
+                    
+                    do 
+                    {
+                        XoaTu();
+                        System.out.print("Ban co muon xoa tu nua khong ?: Nhan YES de tiep tuc, hoac bat ki de thoat: ");
+                        tieptuc = sc.nextLine();
+                    }
+                    while (tieptuc.equals("YES"));
+                    
+                    if(sl != dictionarySD.size()) {
+                        System.out.print("Ban co muon cap nhat vao file tu dien ?. Nhan YES de luu, hoac bat ki de thoat: ");
+                        tieptuc = sc.nextLine();
+                        if(tieptuc.equals("YES"))
+                        {
+                            LuuFile();
+                            System.out.println("Da cap nhat file.");
+                        }
+                    }
+                    System.out.println("-------THANKS-------");
                 }
                 else {
                     System.out.println("Ban da chon sai roi. Moi chon lai.");
@@ -228,41 +300,87 @@ public class Main {
         }
     }
     
-    private  static  void ThemTu() {
-        System.out.print("Moi nham tu (Slang): ");
-        String tu = sc.nextLine();
+    private  static boolean ThemTu(String tu) {
+        if(tu.equals("")) {
+            System.out.print("Moi nham tu (Slang): ");
+            tu = sc.nextLine();
+        }
         if(dictionarySD.get(tu) == null) {
             System.out.print("Moi nham nghia (Definition): ");
             String nghia = sc.nextLine();
             dictionarySD.put(tu, nghia);
             dictionaryDS.put(nghia, tu);
-            
-            BufferedWriter bw = null;
-            FileWriter fw = null;
-            try {
-                String data = "\n" + tu + "`" + nghia;
-                File file = new File("Slang.txt");
-                fw = new FileWriter(file.getAbsoluteFile(), true);
-                bw = new BufferedWriter(fw);
-                bw.write(data);  
-            }
-            catch (IOException e) {
-                e.printStackTrace();
-            } finally {
-                try {
-                    if (bw != null)
-                        bw.close();
-                    if (fw != null)
-                        fw.close();
-                } catch (IOException ex) {
-                    ex.printStackTrace();
-                }
-            }
-
             System.out.println("Them thanh cong");
+            return true;
         }
         else {
             System.out.print("Tu nay da co trong tu dien. Nhan CN de co the cap nhat hoac bat ki de thoat: ");
+            String luachon = sc.nextLine();
+            if(luachon.equals("CN")) {
+                return SuaTu(tu);
+            }
+            return false;
+        }
+    }
+    
+    private  static  void XoaTu() {
+        System.out.print("Moi nham tu (Slang) muon xoa: ");
+        String tu = sc.nextLine();
+        if(dictionarySD.get(tu) == null) {
+            System.out.println("Tu nay khong co trong tu dien.");  
+        }
+        else {
+            dictionaryDS.remove(dictionarySD.get(tu));
+            dictionarySD.remove(tu);
+            System.out.println("Xoa thanh cong");
+        }
+    }
+    
+     private  static boolean SuaTu(String tucapnhat) {
+        if(tucapnhat.equals("")) {
+            System.out.print("Moi nham tu (Slang) muon sua: ");
+            tucapnhat = sc.nextLine();
+        }
+        if(dictionarySD.get(tucapnhat) == null) {
+            System.out.println("Tu nay khong co trong tu dien.");  
+            return false;
+        }
+        else {
+            dictionaryDS.remove(dictionarySD.get(tucapnhat));
+            System.out.print("Moi nham nghia (Definition): ");
+            String nghia = sc.nextLine();
+            
+            dictionarySD.replace(tucapnhat, nghia);
+            dictionaryDS.put(nghia, tucapnhat);
+ 
+            System.out.println("Cap nhat thanh cong");
+            return true;
+        }
+    }
+    
+    private static void LuuFile() {
+        BufferedOutputStream bout = null;
+        FileOutputStream fout = null;
+        try {
+            fout = new FileOutputStream("Slang.txt");
+            bout = new BufferedOutputStream(fout);
+            for (Map.Entry<String, String> item : dictionarySD.entrySet()) {
+                String s=  item.getKey() + "`" + item.getValue() + "\n";
+                byte b[] = s.getBytes();
+                bout.write(b);
+                            bout.flush();
+            }
+
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        } finally {
+            try {
+                bout.close();
+                fout.close();
+            } catch (IOException ex) {
+                Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
         }
     }
 }
