@@ -330,9 +330,12 @@ public class Main {
             System.out.println("Tu nay khong co trong tu dien.");  
         }
         else {
-            dictionaryDS.remove(dictionarySD.get(tu));
-            dictionarySD.remove(tu);
-            System.out.println("Xoa thanh cong");
+            System.out.print("Nhan YES de xoa tu " + tu + " (Slang) = " + dictionarySD.get(tu) + " (Definition), hoac bat ki de thoat: ");
+            if(sc.nextLine().equals("YES")) {
+                dictionaryDS.remove(dictionarySD.get(tu));
+                dictionarySD.remove(tu);
+                System.out.println("Xoa thanh cong");
+            }
         }
     }
     
