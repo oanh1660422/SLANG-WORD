@@ -27,7 +27,7 @@ public class Main {
     public static void main(String[] args) throws IOException {
         LoadThongKe();
         
-        if(LoadTuDien()) { 
+        if(LoadTuDien(false)) { 
             while(true) {
                 System.out.println("1. Tim kiem theo slang word.");
                 System.out.println("2. Tim kiem theo definition.");
@@ -191,6 +191,84 @@ public class Main {
                     }
                     System.out.println("-------THANKS-------");
                 }
+                else if(chon.equals("7")) {
+                    System.out.print("Nhap YES de co the refresh lai tu dien goc, hoac bat ki de thoat: ");
+                    if(sc.nextLine().equals("YES")) {
+                        LoadTuDien(true);
+                        LuuFile();
+                        System.out.println("Da Refresh thanh cong.");
+                        System.out.println("-------THANKS-------");
+                    }
+                }
+                else if(chon.equals("8")) {
+                    do {
+                        Set<String> keySet = dictionarySD.keySet();
+                        List<String> keyList = new ArrayList<>(keySet);
+
+                        int randIdx = new Random().nextInt(keyList.size());
+
+                        String randomKey = keyList.get(randIdx);
+                        String randomValue = dictionarySD.get(randomKey);
+
+                        System.out.println("Random: " + randomKey + " (Slang) = " + randomValue + " (Definition)" );
+                        System.out.print("Nhap YES de tiep tuc, hoac bat ki de thoat: ");
+                    }
+                    while(sc.nextLine().equals("YES"));
+                    System.out.println("-------THANKS-------");
+                }
+                else if (chon.equals("9")) {
+                    Set<String> keySet = dictionarySD.keySet();
+                    List<String> keyList = new ArrayList<>(keySet);
+                    ArrayList<DoVui> list = new ArrayList<DoVui>();
+                    ArrayList check = new ArrayList();
+                    int[] dapan = new int[4];
+                    String cauhoi = "";
+                    
+                    for(int i = 0; i < 4; i++) {
+                        int randIdx = new Random().nextInt(keyList.size());
+                        if(i == 0) {
+                            cauhoi = keyList.get(randIdx);
+                            check.add(randIdx);
+                            DoVui dv = new DoVui();
+                            dv.setNghia(dictionarySD.get(cauhoi));
+                            dv.setDapAn(true);
+                            list.add(dv);
+                        }
+                        else {
+                            if(check.stream().filter(p -> p.equals(randIdx)).findAny().orElse(null) == null) {
+                                check.add(randIdx);
+                                String ranDValue = keyList.get(randIdx);
+                                DoVui dv = new DoVui();
+                                dv.setNghia(dictionarySD.get(ranDValue));
+                                dv.setDapAn(false);
+                                list.add(dv);
+                            }
+                            else {
+                                i--;
+                            }
+                        }
+                    }
+                    System.out.println("Dap an cua " + cauhoi + " la: ");
+                    check = new ArrayList();
+                    for(int i = 0; i < 4; i++) {
+                        int randIdx = new Random().nextInt(4);
+                        if(check.stream().filter(p -> p.equals(randIdx)).findAny().orElse(null) == null) {
+                            check.add(randIdx);
+                            dapan[i] = list.get(randIdx).getDapAn() ? 1 : 0;
+                            System.out.println(i+1 + ". " + list.get(randIdx).getNghia());
+                        }
+                        else {
+                            i--;
+                        }
+                    }
+                    System.out.print("Dap an cua ban la: ");
+                    if(dapan[Integer.parseInt(sc.nextLine())-1] == 1) {
+                        System.out.println("Ban da tra loi dung.");
+                    }
+                    else {
+                        System.out.println("Ban da tra loi sai.");
+                    }
+                }
                 else {
                     System.out.println("Ban da chon sai roi. Moi chon lai.");
                 }
@@ -201,12 +279,16 @@ public class Main {
         }
     }
     
-    private static boolean LoadTuDien() {
+    private static boolean LoadTuDien(boolean refresh) {
         FileInputStream fileInputStream = null;
         BufferedReader bufferedReader = null;
 
         try {
-            fileInputStream = new FileInputStream("slang.txt");
+            if(refresh) {
+                dictionarySD.clear();
+                dictionarySD.clear();
+            }
+            fileInputStream = new FileInputStream(refresh ? "slangBackUp.txt" : "slang.txt");
             bufferedReader = new BufferedReader(new InputStreamReader(fileInputStream));
             String line = bufferedReader.readLine();
             while (line != null) {
