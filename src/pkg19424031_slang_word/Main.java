@@ -217,57 +217,22 @@ public class Main {
                     System.out.println("-------THANKS-------");
                 }
                 else if (chon.equals("9")) {
+                    int diem = 0;
                     Set<String> keySet = dictionarySD.keySet();
                     List<String> keyList = new ArrayList<>(keySet);
-                    ArrayList<DoVui> list = new ArrayList<DoVui>();
-                    ArrayList check = new ArrayList();
-                    int[] dapan = new int[4];
-                    String cauhoi = "";
-                    
-                    for(int i = 0; i < 4; i++) {
-                        int randIdx = new Random().nextInt(keyList.size());
-                        if(i == 0) {
-                            cauhoi = keyList.get(randIdx);
-                            check.add(randIdx);
-                            DoVui dv = new DoVui();
-                            dv.setNghia(dictionarySD.get(cauhoi));
-                            dv.setDapAn(true);
-                            list.add(dv);
+                    do {                        
+                        if(TroChoiDoVui(keyList, true))
+                        {
+                            diem++;
+                            System.out.println("Ban da tra loi dung lien tiep " + diem + " cau.");
                         }
                         else {
-                            if(check.stream().filter(p -> p.equals(randIdx)).findAny().orElse(null) == null) {
-                                check.add(randIdx);
-                                String ranDValue = keyList.get(randIdx);
-                                DoVui dv = new DoVui();
-                                dv.setNghia(dictionarySD.get(ranDValue));
-                                dv.setDapAn(false);
-                                list.add(dv);
-                            }
-                            else {
-                                i--;
-                            }
+                            diem = 0;
+                            System.out.println("Ban da tra loi sai.");
                         }
-                    }
-                    System.out.println("Dap an cua " + cauhoi + " la: ");
-                    check = new ArrayList();
-                    for(int i = 0; i < 4; i++) {
-                        int randIdx = new Random().nextInt(4);
-                        if(check.stream().filter(p -> p.equals(randIdx)).findAny().orElse(null) == null) {
-                            check.add(randIdx);
-                            dapan[i] = list.get(randIdx).getDapAn() ? 1 : 0;
-                            System.out.println(i+1 + ". " + list.get(randIdx).getNghia());
-                        }
-                        else {
-                            i--;
-                        }
-                    }
-                    System.out.print("Dap an cua ban la: ");
-                    if(dapan[Integer.parseInt(sc.nextLine())-1] == 1) {
-                        System.out.println("Ban da tra loi dung.");
-                    }
-                    else {
-                        System.out.println("Ban da tra loi sai.");
-                    }
+                        System.out.print("Nhap 1 de tiep tuc, hoac bat ki de thoat: ");
+                    } while(sc.nextLine().equals("1"));
+                    System.out.println("-------THANKS-------");
                 }
                 else {
                     System.out.println("Ban da chon sai roi. Moi chon lai.");
@@ -464,8 +429,59 @@ public class Main {
                 fout.close();
             } catch (IOException ex) {
                 Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+            }           
+        }
+    }
+    
+    private static boolean  TroChoiDoVui(List<String> keyList, boolean  Slang) {
+        List<DoVui> list = new ArrayList<DoVui>();
+        List check = new ArrayList();
+        int[] dapan = new int[4];
+        String cauhoi = "";
+
+        for(int i = 0; i < 4; i++) {
+            int randIdx = new Random().nextInt(keyList.size());
+            if(i == 0) {
+                cauhoi = keyList.get(randIdx);
+                check.add(randIdx);
+                DoVui dv = new DoVui();
+                dv.setNghia(Slang ? dictionarySD.get(cauhoi): dictionaryDS.get(cauhoi) );
+                dv.setDapAn(true);
+                list.add(dv);
             }
-            
+            else {
+                if(check.stream().filter(p -> p.equals(randIdx)).findAny().orElse(null) == null) {
+                    check.add(randIdx);
+                    String ranDValue = keyList.get(randIdx);
+                    DoVui dv = new DoVui();
+                    dv.setNghia(Slang ? dictionarySD.get(ranDValue): dictionaryDS.get(ranDValue));
+                    dv.setDapAn(false);
+                    list.add(dv);
+                }
+                else {
+                    i--;
+                }
+            }
+        }
+        System.out.println("Dap an cua " + cauhoi + " la: ");
+        check = new ArrayList();
+        for(int i = 0; i < 4; i++) {
+            int randIdx = new Random().nextInt(4);
+            if(check.stream().filter(p -> p.equals(randIdx)).findAny().orElse(null) == null) {
+                check.add(randIdx);
+                dapan[i] = list.get(randIdx).getDapAn() ? 1 : 0;
+                System.out.println(i+1 + ". " + list.get(randIdx).getNghia());
+            }
+            else {
+                i--;
+            }
+        }
+        System.out.print("Dap an cua ban la: ");
+        if(dapan[Integer.parseInt(sc.nextLine())-1] == 1) {
+            return true;
+        }
+        else {
+            return false;
         }
     }
 }
