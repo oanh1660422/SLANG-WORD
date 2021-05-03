@@ -234,6 +234,24 @@ public class Main {
                     } while(sc.nextLine().equals("1"));
                     System.out.println("-------THANKS-------");
                 }
+                else if (chon.equals("10")) {
+                    int diem = 0;
+                    Set<String> keySet = dictionaryDS.keySet();
+                    List<String> keyList = new ArrayList<>(keySet);
+                    do {                        
+                        if(TroChoiDoVui(keyList, false))
+                        {
+                            diem++;
+                            System.out.println("Ban da tra loi dung lien tiep " + diem + " cau.");
+                        }
+                        else {
+                            diem = 0;
+                            System.out.println("Ban da tra loi sai.");
+                        }
+                        System.out.print("Nhap 1 de tiep tuc, hoac bat ki de thoat: ");
+                    } while(sc.nextLine().equals("1"));
+                    System.out.println("-------THANKS-------");
+                }
                 else {
                     System.out.println("Ban da chon sai roi. Moi chon lai.");
                 }
