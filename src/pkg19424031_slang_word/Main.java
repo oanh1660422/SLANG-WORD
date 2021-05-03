@@ -35,7 +35,7 @@ public class Main {
                 System.out.println("4. Them tu moi vao slang word.");
                 System.out.println("5. Sua tu trong slang word.");
                 System.out.println("6. Xoa tu trong slang word.");
-                System.out.println("7. Reset danh sách slang word goc");
+                System.out.println("7. Reset danh sach slang word goc");
                 System.out.println("8. Random 1 slang word");
                 System.out.println("9. Do vui, Ramdom slang word");
                 System.out.println("10. Do vui, Ramdom definition");
@@ -58,7 +58,7 @@ public class Main {
                                 WriteHistory(tratu, nghia, "S");
                             }
                             else {
-                                System.out.println("Tu nay chua co trong tu dien. Nhap 'THEM' de them vao hoac bam bat ki de tiep tuc.");
+                                System.out.print("Tu nay chua co trong tu dien. Nhap 'THEM' de them vao hoac bam bat ki de tiep tuc: ");
                                 if(sc.nextLine().equals("THEM")) {
                                     if(ThemTu(tratu)) {
                                         System.out.print("Ban co muon cap nhat vao file tu dien ?. Nhan YES de luu, hoac bat ki de thoat: ");
@@ -87,7 +87,7 @@ public class Main {
                                 WriteHistory(tratu, nghia, "D");
                             }
                             else {
-                                System.out.println("Tu nay chua co trong tu dien. Nhap 'THEM' de them vao hoac bam bat ki de tiep tuc.");
+                                System.out.print("Tu nay chua co trong tu dien. Nhap 'THEM' de them vao hoac bam bat ki de tiep tuc: ");
                                 if(sc.nextLine().equals("THEM")) {
                                     if(ThemTu("")) {
                                         System.out.print("Ban co muon cap nhat vao file tu dien ?. Nhan YES de luu, hoac bat ki de thoat: ");
@@ -265,7 +265,6 @@ public class Main {
     private static boolean LoadTuDien(boolean refresh) {
         FileInputStream fileInputStream = null;
         BufferedReader bufferedReader = null;
-
         try {
             if(refresh) {
                 dictionarySD.clear();
@@ -277,21 +276,23 @@ public class Main {
             while (line != null) {
                 dictionarySD.put(line.split("`")[0],line.split("`")[1]);
                 dictionaryDS.put(line.split("`")[1],line.split("`")[0]);
+                //if(line.indexOf("`") == -1 ) {
+                  //  System.out.println(line);
+                //}
                 line = bufferedReader.readLine();
+                
             }
             bufferedReader.close();
             fileInputStream.close();
             return true;
         } catch (IOException ex) {
-            System.out.print("Lõi");
             return false;
-        } 
+        }
     }
     
     private static void LoadThongKe() throws IOException {
         File x = new File("History.txt");
         Scanner sc = new Scanner(x);
-
         int n = Integer.parseInt(sc.nextLine());
 
         for (int i = 0; i < n; i++) {
